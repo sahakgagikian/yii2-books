@@ -62,7 +62,7 @@ class Book extends ActiveRecord
     }
 
     /**
-     * Gets query for [[AuthorsBook]].
+     * Gets query for [[Authors]].
      *
      * @return ActiveQuery
      */

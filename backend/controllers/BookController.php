@@ -114,10 +114,21 @@ class BookController extends Controller
     public function actionUpdate($id)
     {
         $model = $this->findModel($id);
+        $authorsBookModel = AuthorsBook::find()
+            ->where(['book_id' => $id])
+            ->all();
 
         if ($this->request->isPost && $model->load($this->request->post()) && $model->save()) {
-            $this->findModel($id)->delete();
-            $this->actionCreate();
+            foreach ($authorsBookModel as $abm) {
+                $abm->delete();
+            }
+            foreach ($model->authorIds as $id) {
+                $authorsBook = new AuthorsBook();
+                $authorsBook->book_id = $model->id;
+                $authorsBook->author_id = $id;
+                $authorsBook->save();
+            }
+            return $this->redirect(['view', 'id' => $model->id]);
         }
 
         return $this->render('update', [
